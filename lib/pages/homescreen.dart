@@ -1,11 +1,46 @@
 import 'package:demoapp/pages/routes.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 //import 'globals.dart';
 
-class Homescreen extends StatelessWidget {
+class Homescreen extends StatefulWidget {
   const Homescreen({Key? key}) : super(key: key);
+
+  @override
+  _HomescreenState createState() => _HomescreenState();
+}
+
+class _HomescreenState extends State<Homescreen> {
+  late Razorpay _razorpay;
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    // _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    // _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    // _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  void openCheckout() {
+    var options = {
+      'key': 'rzp_test_SKncRpp5M0h7Xx',
+      'amount': 15000,
+      'name': 'Anubhav',
+      'description': 'Payment',
+      'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint('e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +65,12 @@ class Homescreen extends StatelessWidget {
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
-              )
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    openCheckout();
+                  },
+                  child: Text('Go to payment screen'))
             ],
           ),
         ),
